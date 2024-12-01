@@ -1,4 +1,4 @@
-﻿namespace Enchapes.Models
+﻿namespace Enchapes_Modelos
 {
     public class CarroCompra
     {

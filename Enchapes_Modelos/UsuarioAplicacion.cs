@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace Enchapes.Models
+namespace Enchapes_Modelos
 {
     public class UsuarioAplicacion :IdentityUser
     {

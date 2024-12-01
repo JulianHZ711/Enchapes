@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace Enchapes.Migrations
+namespace Enchapes_AccesoDatos.Migrations
 {
     /// <inheritdoc />
     public partial class agregarProductoABaseDatos : Migration

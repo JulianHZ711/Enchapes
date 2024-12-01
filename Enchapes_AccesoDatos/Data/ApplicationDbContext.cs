@@ -1,9 +1,9 @@
-﻿using Enchapes.Models;
+﻿using Enchapes_Modelos;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection.Metadata.Ecma335;
 
-namespace Enchapes.Data
+namespace Enchapes_AccesoDatos.Datos
 {
     public class ApplicationDbContext : IdentityDbContext
     {

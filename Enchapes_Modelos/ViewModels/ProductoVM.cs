@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
 
-namespace Enchapes.Models.ViewModels
+namespace Enchapes_Modelos.ViewModels
 {
     public class ProductoVM
     {

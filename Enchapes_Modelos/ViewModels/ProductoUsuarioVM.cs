@@ -1,4 +1,4 @@
-﻿namespace Enchapes.Models.ViewModels
+﻿namespace Enchapes_Modelos.ViewModels
 {
     public class ProductoUsuarioVM
     {

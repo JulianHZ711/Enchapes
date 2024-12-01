@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Enchapes.Models
+namespace Enchapes_Modelos
 {
     public class TipoAplicacion
     {

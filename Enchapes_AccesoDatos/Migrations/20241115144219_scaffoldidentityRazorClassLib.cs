@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Enchapes.Migrations
+namespace Enchapes_AccesoDatos.Migrations
 {
     /// <inheritdoc />
     public partial class scaffoldidentityRazorClassLib : Migration

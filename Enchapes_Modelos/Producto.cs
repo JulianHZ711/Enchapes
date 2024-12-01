@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Reflection.Metadata.Ecma335;
 
-namespace Enchapes.Models
+namespace Enchapes_Modelos
 {
     public class Producto
     {
