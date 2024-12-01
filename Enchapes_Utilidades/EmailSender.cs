@@ -10,9 +10,11 @@ namespace Enchapes_Utilidades
     {
         public string SendGridSecret { get; set; }
 
-        public EmailSender(IConfiguration _config)
+        private readonly string _apiKey;
+
+        public EmailSender(string apiKey)
         {
-            SendGridSecret = _config.GetValue<string>("SendGrid:SecretKey");
+            _apiKey = apiKey;
         }
 
         public Task SendEmailAsync(string email, string subject, string htmlMessage)

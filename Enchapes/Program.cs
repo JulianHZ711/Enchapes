@@ -6,6 +6,11 @@ using Enchapes_Utilidades;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Leer la API key desde la variable de entorno
+var apiKey = builder.Configuration["API_KEY"]; // La clave debe ser exactamente el mismo nombre que la variable de entorno
+
+builder.Services.AddSingleton(new EmailSender(apiKey));
+
 // Add services to the container.
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
