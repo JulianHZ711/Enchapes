@@ -3,13 +3,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Enchapes_Utilidades;
+using Enchapes_AccesoDatos.Data.Repositorio.IRepositorio;
+using Enchapes_AccesoDatos.Data.Repositorio;
 
 var builder = WebApplication.CreateBuilder(args);
-
-// Leer la API key desde la variable de entorno
-var apiKey = builder.Configuration["API_KEY"]; // La clave debe ser exactamente el mismo nombre que la variable de entorno
-
-builder.Services.AddSingleton(new EmailSender(apiKey));
 
 // Add services to the container.
 
@@ -17,11 +14,12 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
                             options.UseSqlServer(
                                 builder.Configuration.GetConnectionString("DefaultConnection")));
 
+builder.Services.AddTransient<IEmailSender, EmailSender>();
+
 builder.Services.AddIdentity<IdentityUser, IdentityRole>()
                 .AddDefaultTokenProviders().AddDefaultUI()
                 .AddEntityFrameworkStores<ApplicationDbContext>();  
 
-builder.Services.AddTransient<IEmailSender, EmailSender>();
 
 builder.Services.AddControllersWithViews();
 
@@ -32,6 +30,15 @@ builder.Services.AddSession(Options =>
     Options.Cookie.HttpOnly = true;
     Options.Cookie.IsEssential = true;
 });
+
+builder.Services.AddScoped<ICategoriaRepositorio, CategoriaRepositorio>();
+builder.Services.AddScoped<ITipoAplicacionRepositorio, TipoAplicacionRepositorio>();
+builder.Services.AddScoped<IProductoRepositorio, ProductoRepositorio>();
+builder.Services.AddScoped<IOrdenRepositorio, OrdenRepositorio>();
+builder.Services.AddScoped<IOrdenDetalleRepositorio, OrdenDetalleRepositorio>();
+builder.Services.AddScoped<IUsuarioAplicacionRepositorio, UsuarioAplicacionRepositorio>();
+
+
 
 var app = builder.Build();
 

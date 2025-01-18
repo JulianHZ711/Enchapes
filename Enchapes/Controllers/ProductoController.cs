@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System.IO;
 using Enchapes_Utilidades;
+using Enchapes_AccesoDatos.Data.Repositorio.IRepositorio;
 
 namespace Enchapes.Controllers
 {
@@ -14,20 +15,22 @@ namespace Enchapes.Controllers
     public class ProductoController : Controller
     {
 
-        private readonly ApplicationDbContext _db;
+        private readonly IProductoRepositorio _productoRepo;
         private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public ProductoController(ApplicationDbContext db , IWebHostEnvironment webHostEnvironment)
+        public ProductoController(IProductoRepositorio productoRepo, IWebHostEnvironment webHostEnvironment)
         {
-            _db = db;
+            _productoRepo = productoRepo;
             _webHostEnvironment = webHostEnvironment;
         }
 
         public IActionResult Index()
         {
-            IEnumerable<Producto> lista = _db.Producto.Include(c => c.Categoria)
-                                                       .Include(t=> t.TipoAplicacion);
+            //Se utiliza Patron de repositorio
+            //IEnumerable<Producto> lista = _db.Producto.Include(c => c.Categoria)
+            //                                           .Include(t=> t.TipoAplicacion);
 
+            IEnumerable<Producto> lista = _productoRepo.ObtenerTodos(incluirPropiedades: "Categoria,TipoAplicacion");
             return View(lista);
         }
 
@@ -48,17 +51,20 @@ namespace Enchapes.Controllers
             ProductoVM productoVM = new ProductoVM()
             {
                 Producto = new Producto(),
-                CategoriaLista =    _db.Categoria.Select(c => new SelectListItem
-                {
-               Text = c.NombreCategoria,
-                Value = c.Id.ToString()
-                }),
+                // CategoriaLista =    _db.Categoria.Select(c => new SelectListItem
+                // {
+                //Text = c.NombreCategoria,
+                // Value = c.Id.ToString()
+                // }),
 
-                TipoAplicacionLista = _db.TipoAplicacion.Select(c => new SelectListItem
-                {
-                    Text = c.Nombre,
-                    Value = c.Id.ToString()
-                }),
+                // TipoAplicacionLista = _db.TipoAplicacion.Select(c => new SelectListItem
+                // {
+                //     Text = c.Nombre,
+                //     Value = c.Id.ToString()
+                // })
+
+                CategoriaLista = _productoRepo.ObtenerTodosDropdownList(WC.CategoriaNombre),
+                TipoAplicacionLista = _productoRepo.ObtenerTodosDropdownList(WC.TipoAplicacionNombre)
 
             };
 
@@ -70,7 +76,7 @@ namespace Enchapes.Controllers
             }
             else
             {
-                productoVM.Producto = _db.Producto.Find(Id);
+                productoVM.Producto = _productoRepo.Obtener(Id.GetValueOrDefault());
                 if (productoVM == null)
                 {
                     return NotFound();
@@ -99,12 +105,13 @@ namespace Enchapes.Controllers
                     }
 
                     productoVM.Producto.ImagenUrl = fileName+extension;
-                    _db.Producto.Add(productoVM.Producto);
+                    _productoRepo.Agregar(productoVM.Producto);
                 }
                 else
                 {
                     //Actualizar
-                    var objProducto = _db.Producto.AsNoTracking().FirstOrDefault(p=>p.Id == productoVM.Producto.Id);
+                    //var objProducto = _productoRepo..FirstOrDefault(p=>p.Id == productoVM.Producto.Id);
+                    var objProducto = _productoRepo.ObtenerPrimero(p => p.Id == productoVM.Producto.Id, isTracking: false);
 
                     if (files.Count > 0) //Se carga nueva imagen
                     {
@@ -131,26 +138,30 @@ namespace Enchapes.Controllers
                     {
                         productoVM.Producto.ImagenUrl = objProducto.ImagenUrl;
                     }
-                    _db.Producto.Update(productoVM.Producto);
+                    _productoRepo.Actualizar(productoVM.Producto);
 
 
                 }
-                _db.SaveChanges();
+                _productoRepo.Grabar();
                 return RedirectToAction("Index");
                 // If modelIsValid
             }
             //Se llennan nuevamente las vistas por si algo falla
-            productoVM.CategoriaLista = _db.Categoria.Select(c => new SelectListItem
-            {
-                Text = c.NombreCategoria,
-                Value = c.Id.ToString()
-            });
+            //productoVM.CategoriaLista = _db.Categoria.Select(c => new SelectListItem
+            //{
+            //    Text = c.NombreCategoria,
+            //    Value = c.Id.ToString()
+            //});
 
-            productoVM.TipoAplicacionLista = _db.TipoAplicacion.Select(c => new SelectListItem
-            {
-                Text = c.Nombre,
-                Value = c.Id.ToString()
-            });
+            //productoVM.TipoAplicacionLista = _db.TipoAplicacion.Select(c => new SelectListItem
+            //{
+            //    Text = c.Nombre,
+            //    Value = c.Id.ToString()
+            //});
+
+            productoVM.CategoriaLista = _productoRepo.ObtenerTodosDropdownList(WC.CategoriaNombre);
+            productoVM.TipoAplicacionLista = _productoRepo.ObtenerTodosDropdownList(WC.TipoAplicacionNombre);
+
 
             return View(productoVM);
 
@@ -164,9 +175,7 @@ namespace Enchapes.Controllers
                 return NotFound();
             }
 
-            Producto producto = _db.Producto.Include(c=>c.Categoria)
-                                            .Include(t=>t.TipoAplicacion)
-                                            .FirstOrDefault(p=>p.Id==Id);
+            Producto producto = _productoRepo.ObtenerPrimero(p=>p.Id==Id, incluirPropiedades: "Categoria,TipoAplicacion");
 
             if (producto == null)
             {
@@ -196,8 +205,8 @@ namespace Enchapes.Controllers
             }
             //Fin borrar imagen
 
-            _db.Producto.Remove(producto);
-            _db.SaveChanges();
+            _productoRepo.Remover(producto);
+            _productoRepo.Grabar();
             return RedirectToAction(nameof(Index));
         }
 

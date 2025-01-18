@@ -3,6 +3,8 @@ using Enchapes_Modelos;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Enchapes_Utilidades;
+using Enchapes_AccesoDatos.Data.Repositorio.IRepositorio;
+
 
 
 namespace Enchapes.Controllers
@@ -10,15 +12,15 @@ namespace Enchapes.Controllers
     [Authorize(Roles = WC.AdminRole)]
     public class CategoriaController : Controller
     {
-        private readonly ApplicationDbContext _db;
+        private readonly ICategoriaRepositorio _catRepo;
 
-        public CategoriaController(ApplicationDbContext db)
+        public CategoriaController(ICategoriaRepositorio catRepo)
         {
-            _db = db;
+            _catRepo = catRepo;
         }
         public IActionResult Index()
         {
-            IEnumerable<Categoria> lista = _db.Categoria;
+            IEnumerable<Categoria> lista = _catRepo.ObtenerTodos();
 
             return View(lista);
         }
@@ -37,12 +39,15 @@ namespace Enchapes.Controllers
 
             if (ModelState.IsValid)
             {
-                _db.Categoria.Add(categoria);
-                _db.SaveChanges();
+                _catRepo.Agregar(categoria);
+                _catRepo.Grabar();
+                TempData[WC.Exitosa] = "Categoria creada exitosamente";
 
                 return RedirectToAction(nameof(Index));
 
             }
+            TempData[WC.Error] = "Error al crear nueva categoria";
+
             return View(categoria);
             
         }
@@ -54,7 +59,7 @@ namespace Enchapes.Controllers
             {
                 return NotFound();
             }
-            var obj = _db.Categoria.Find(Id);
+            var obj = _catRepo.Obtener(Id.GetValueOrDefault());
             if (obj == null)
             {
                 return NotFound(); 
@@ -70,12 +75,14 @@ namespace Enchapes.Controllers
 
             if (ModelState.IsValid)
             {
-                _db.Categoria.Update(categoria);
-                _db.SaveChanges();
+                _catRepo.Actualizar(categoria);
+                _catRepo.Grabar();
+                TempData[WC.Exitosa] = "Categoria actualizada exitosamente";
 
                 return RedirectToAction(nameof(Index));
 
             }
+            TempData[WC.Error] = "Error al actualizar categoria";
             return View(categoria);
 
         }
@@ -87,7 +94,7 @@ namespace Enchapes.Controllers
             {
                 return NotFound();
             }
-            var obj = _db.Categoria.Find(Id);
+            var obj = _catRepo.Obtener(Id.GetValueOrDefault());
             if (obj == null)
             {
                 return NotFound();
@@ -106,8 +113,9 @@ namespace Enchapes.Controllers
                 return NotFound();
 
             }
-            _db.Categoria.Remove(categoria);
-            _db.SaveChanges();
+            _catRepo.Remover(categoria);
+            _catRepo.Grabar();
+            TempData[WC.Exitosa] = "Categoria eliminada exitosamente";
 
             return RedirectToAction(nameof(Index));
             

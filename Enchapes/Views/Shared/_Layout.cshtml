@@ -50,6 +50,15 @@
                                     <li><a class="dropdown-item" asp-area="Identity" asp-page="/Account/Register">Crear nuevo usuario</a></li>
                                 </ul>
                             </li>
+
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Administrar Ordenes
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <li><a class="dropdown-item" asp-area="" asp-controller="Orden" asp-action="Index">Orden</a></li>
+                                </ul>
+                            </li>
                         }
                         <li>
                             @if(HttpContextAccessor.HttpContext.Session.Get<List<CarroCompra>>(WC.SessionCarroCompras) !=null)
@@ -75,6 +84,7 @@
     </header>
     <div class="container">
         <main role="main" class="pb-3">
+			<partial name="_Notificaciones" />
             @RenderBody()
         </main>
     </div>
@@ -89,7 +99,6 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote.min.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.syncfusion.com/ej2/dist/ej2.min.js"></script>
     @await RenderSectionAsync("Scripts", required: false)

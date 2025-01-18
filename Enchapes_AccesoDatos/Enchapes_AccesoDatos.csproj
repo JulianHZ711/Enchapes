@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="Data\Repositorio\UsuarioAplicacionRepositorio.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.11" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.11" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.11" />
@@ -14,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Enchapes_Modelos\Enchapes_Modelos.csproj" />
+    <ProjectReference Include="..\Enchapes_Utilidades\Enchapes_Utilidades.csproj" />
   </ItemGroup>
 
 </Project>

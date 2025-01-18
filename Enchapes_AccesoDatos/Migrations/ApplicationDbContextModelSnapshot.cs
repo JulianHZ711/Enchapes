@@ -42,6 +42,63 @@ namespace Enchapes_AccesoDatos.Migrations
                     b.ToTable("Categoria");
                 });
 
+            modelBuilder.Entity("Enchapes_Modelos.Orden", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("FechaOrden")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("NombreCompleto")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Telefono")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UsuarioAplicacionId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UsuarioAplicacionId");
+
+                    b.ToTable("Orden");
+                });
+
+            modelBuilder.Entity("Enchapes_Modelos.OrdenDetalle", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("OrdenId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductoId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrdenId");
+
+                    b.HasIndex("ProductoId");
+
+                    b.ToTable("OrdenDetalle");
+                });
+
             modelBuilder.Entity("Enchapes_Modelos.Producto", b =>
                 {
                     b.Property<int>("Id")
@@ -312,10 +369,39 @@ namespace Enchapes_AccesoDatos.Migrations
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
 
                     b.Property<string>("NombreCompleto")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasDiscriminator().HasValue("UsuarioAplicacion");
+                });
+
+            modelBuilder.Entity("Enchapes_Modelos.Orden", b =>
+                {
+                    b.HasOne("Enchapes_Modelos.UsuarioAplicacion", "UsuarioAplicacion")
+                        .WithMany()
+                        .HasForeignKey("UsuarioAplicacionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("UsuarioAplicacion");
+                });
+
+            modelBuilder.Entity("Enchapes_Modelos.OrdenDetalle", b =>
+                {
+                    b.HasOne("Enchapes_Modelos.Orden", "Orden")
+                        .WithMany()
+                        .HasForeignKey("OrdenId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Enchapes_Modelos.Producto", "Producto")
+                        .WithMany()
+                        .HasForeignKey("ProductoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Orden");
+
+                    b.Navigation("Producto");
                 });
 
             modelBuilder.Entity("Enchapes_Modelos.Producto", b =>

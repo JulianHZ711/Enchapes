@@ -1,3 +1,4 @@
+using Enchapes_AccesoDatos.Data.Repositorio.IRepositorio;
 using Enchapes_AccesoDatos.Datos;
 using Enchapes_Modelos;
 using Enchapes_Modelos.ViewModels;
@@ -11,22 +12,29 @@ namespace Enchapes.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly ApplicationDbContext _db;
+        private readonly IProductoRepositorio _productoRepo;
+        private readonly ICategoriaRepositorio _categoriaRepo;
 
 
 
-        public HomeController(ILogger<HomeController> logger, ApplicationDbContext db)
+
+        public HomeController(ILogger<HomeController> logger, IProductoRepositorio productoRepositorio, ICategoriaRepositorio categoriaRepo)
         {
             _logger = logger;
-            _db = db;
+            _productoRepo = productoRepositorio;
+            _categoriaRepo = categoriaRepo;
         }
 
         public IActionResult Index()
         {
             HomeVM homeVM = new HomeVM()
             {
-                Productos = _db.Producto.Include(c=>c.Categoria).Include(t=>t.TipoAplicacion),
-                Categorias = _db.Categoria
+
+                //Productos = _db.Producto.Include(c=>c.Categoria).Include(t=>t.TipoAplicacion),
+                //Categorias = _db.Categoria
+
+                Productos = _productoRepo.ObtenerTodos(incluirPropiedades: "Categoria,TipoAplicacion"),
+                Categorias = _categoriaRepo.ObtenerTodos()
             };
 
             return View(homeVM);
@@ -43,8 +51,10 @@ namespace Enchapes.Controllers
 
             DetalleVM detalleVM = new DetalleVM()
             {
-                Producto = _db.Producto.Include(c => c.Categoria).Include(t => t.TipoAplicacion)
-                                       .Where(p => p.Id == Id).FirstOrDefault(),
+                //Producto = _db.Producto.Include(c => c.Categoria).Include(t => t.TipoAplicacion)
+                //                       .Where(p => p.Id == Id).FirstOrDefault(),
+
+                Producto = _productoRepo.ObtenerPrimero(p => p.Id == Id, incluirPropiedades:"Categoria,TipoAplicacion"),
                 ExisteEnCarro = false
             };
             foreach (var item in carroComprasLista)

@@ -3,6 +3,7 @@ using Enchapes_Modelos;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Enchapes_Utilidades;
+using Enchapes_AccesoDatos.Data.Repositorio.IRepositorio;
 
 namespace Enchapes.Controllers
 
@@ -11,15 +12,15 @@ namespace Enchapes.Controllers
     [Authorize(Roles = WC.AdminRole)]
     public class TipoAplicacionController : Controller
     {
-        private readonly ApplicationDbContext _db;
+        private readonly ITipoAplicacionRepositorio _tipoRepo;
 
-        public TipoAplicacionController(ApplicationDbContext db)
+        public TipoAplicacionController(ITipoAplicacionRepositorio tipoRepo)
         {
-            _db = db;
+            _tipoRepo = tipoRepo;
         }
         public IActionResult Index()
         {
-            IEnumerable<TipoAplicacion> lista = _db.TipoAplicacion;
+            IEnumerable<TipoAplicacion> lista = _tipoRepo.ObtenerTodos();
 
             return View(lista);
         }
@@ -37,8 +38,8 @@ namespace Enchapes.Controllers
 
             if (ModelState.IsValid)
             {
-                _db.TipoAplicacion.Add(tipoAplicacion);
-                _db.SaveChanges();
+                _tipoRepo.Agregar(tipoAplicacion);
+                _tipoRepo.Grabar();
 
                 return RedirectToAction(nameof(Index));
 
@@ -54,7 +55,7 @@ namespace Enchapes.Controllers
             {
                 return NotFound();
             }
-            var obj = _db.TipoAplicacion.Find(Id);
+            var obj = _tipoRepo.Obtener(Id.GetValueOrDefault());
             if (obj == null)
             {
                 return NotFound();
@@ -70,8 +71,8 @@ namespace Enchapes.Controllers
 
             if (ModelState.IsValid)
             {
-                _db.TipoAplicacion.Update(tipoAplicacion);
-                _db.SaveChanges();
+                _tipoRepo.Actualizar(tipoAplicacion);
+                _tipoRepo.Grabar();
 
                 return RedirectToAction(nameof(Index));
 
@@ -87,7 +88,7 @@ namespace Enchapes.Controllers
             {
                 return NotFound();
             }
-            var obj = _db.TipoAplicacion.Find(Id);
+            var obj = _tipoRepo.Obtener(Id.GetValueOrDefault());
             if (obj == null)
             {
                 return NotFound();
@@ -106,8 +107,8 @@ namespace Enchapes.Controllers
                 return NotFound();
 
             }
-            _db.TipoAplicacion.Remove(tipoAplicacion);
-            _db.SaveChanges();
+            _tipoRepo.Remover(tipoAplicacion);
+            _tipoRepo.Grabar();
 
             return RedirectToAction(nameof(Index));
 

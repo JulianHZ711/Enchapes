@@ -19,5 +19,9 @@ namespace Enchapes_AccesoDatos.Datos
         public DbSet<Producto> Producto { get; set; }
 
         public DbSet<UsuarioAplicacion> usuarioAplicacion { get; set; }
+
+        public DbSet<Orden> Orden { get; set; }
+
+        public DbSet<OrdenDetalle> OrdenDetalle { get; set; }
     }
 }
