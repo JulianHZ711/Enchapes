@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.AspNetCore.Identity;
 
 namespace Enchapes_Modelos
 {
@@ -6,6 +7,11 @@ namespace Enchapes_Modelos
     {
         public string NombreCompleto { get; set; }
 
+        [NotMapped]
+        public string Direccion { get; set; }
+
+        [NotMapped]
+        public string Ciudad { get; set; }
 
     }
 }

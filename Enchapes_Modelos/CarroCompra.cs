@@ -4,5 +4,7 @@
     {
 
         public int ProductoId { get; set; }
+
+        public int MetroCuadrado { get; set; }
     }
 }

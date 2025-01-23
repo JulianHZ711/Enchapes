@@ -6,6 +6,11 @@ namespace Enchapes_Modelos
 {
     public class Producto
     {
+
+        public Producto()
+        {
+            TempMetroCuadrado = 1;
+        }
         [Key]
         public int Id { get; set; }
 
@@ -38,5 +43,9 @@ namespace Enchapes_Modelos
 
         [ForeignKey("TipoAplicacionId")]
         public virtual TipoAplicacion? TipoAplicacion { get; set; }
+
+        [NotMapped] //Me permite que la propiedad no se mapee en la base de datos
+        [Range(1, 10000)]
+        public int TempMetroCuadrado { get; set; }
     }
 }

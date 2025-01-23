@@ -69,7 +69,7 @@ namespace Enchapes.Controllers
         }
 
         [HttpPost, ActionName("Detalle")]
-        public IActionResult DetallePost(int Id)
+        public IActionResult DetallePost(int Id, DetalleVM detalleVM)
         {
             List<CarroCompra> carroComprasLista = new List<CarroCompra>();
             if (HttpContext.Session.Get<IEnumerable<CarroCompra>>(WC.SessionCarroCompras)!=null
@@ -77,7 +77,8 @@ namespace Enchapes.Controllers
             {
                 carroComprasLista = HttpContext.Session.Get<List<CarroCompra>>(WC.SessionCarroCompras);
             }
-            carroComprasLista.Add(new CarroCompra {ProductoId = Id});
+            
+            carroComprasLista.Add(new CarroCompra {ProductoId = Id, MetroCuadrado = detalleVM.Producto.TempMetroCuadrado});
             HttpContext.Session.Set(WC.SessionCarroCompras, carroComprasLista);
 
             return RedirectToAction(nameof(Index));
