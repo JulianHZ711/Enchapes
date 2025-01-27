@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Enchapes_Utilidades;
 using Enchapes_AccesoDatos.Data.Repositorio.IRepositorio;
 using Enchapes_AccesoDatos.Data.Repositorio;
+using Enchapes_Utilidades.BrainTree;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,14 +32,17 @@ builder.Services.AddSession(Options =>
     Options.Cookie.IsEssential = true;
 });
 
+builder.Services.Configure<BrainTreeSettings>(builder.Configuration.GetSection("BrainTree"));
+builder.Services.AddSingleton<IBrainTreeGate, BrainTreeGate>();
+
 builder.Services.AddScoped<ICategoriaRepositorio, CategoriaRepositorio>();
 builder.Services.AddScoped<ITipoAplicacionRepositorio, TipoAplicacionRepositorio>();
 builder.Services.AddScoped<IProductoRepositorio, ProductoRepositorio>();
 builder.Services.AddScoped<IOrdenRepositorio, OrdenRepositorio>();
 builder.Services.AddScoped<IOrdenDetalleRepositorio, OrdenDetalleRepositorio>();
 builder.Services.AddScoped<IUsuarioAplicacionRepositorio, UsuarioAplicacionRepositorio>();
-
-
+builder.Services.AddScoped<IVentaRepositorio, VentaRepositorio>();
+builder.Services.AddScoped<IVentaDetalleRepositorio, VentaDetalleRepositorio>();
 
 var app = builder.Build();
 
