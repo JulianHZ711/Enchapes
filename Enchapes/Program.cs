@@ -44,6 +44,12 @@ builder.Services.AddScoped<IUsuarioAplicacionRepositorio, UsuarioAplicacionRepos
 builder.Services.AddScoped<IVentaRepositorio, VentaRepositorio>();
 builder.Services.AddScoped<IVentaDetalleRepositorio, VentaDetalleRepositorio>();
 
+builder.Services.AddAuthentication().AddFacebook(options =>
+{
+    options.AppId = "";
+    options.AppSecret = "";
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
